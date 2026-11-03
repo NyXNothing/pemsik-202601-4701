@@ -52,10 +52,6 @@ const router = createBrowserRouter([
             path: ":nim",
             element: <MahasiswaDetail />,
           },
-          {
-            path: "mahasiswa/:nim",
-            element: <MahasiswaDetail />,
-          }
         ],
       },
     ],
