@@ -1,34 +1,27 @@
-
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
 import Card from "@/Pages/Admin/Components/Card";
 import Heading from "@/Pages/Admin/Components/Heading";
 import Button from "@/Pages/Admin/Components/Button";
-import Input from "@/Pages/Auth/Components/Input";
-import Label from "@/Pages/Auth/Components/Label";
-
+import MahasiswaModal from "./MahasiswaModal";
+import MahasiswaTable from "./MahasiswaTable";
 import { mahasiswaList } from "@/Data/Dummy";
+import { confirmAction } from "@/Helpers/SwalHelper";
+import { showSuccess, showError } from "@/Helpers/ToastHelper";
 
 const Mahasiswa = () => {
   const [mahasiswa, setMahasiswa] = useState([]);
+  const [selectedMahasiswa, setSelectedMahasiswa] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const fetchMahasiswa = async () => {
-	  // bisa disimulasikan delay atau nanti diganti fetch API
-	  setMahasiswa(mahasiswaList);
-	};
+    setMahasiswa(mahasiswaList);
+  };
 
   useEffect(() => {
-	  setTimeout(() => fetchMahasiswa(), 500);
-	}, []);
-  
-  const [form, setForm] = useState({ nim: "", nama: "" });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [editNim, setEditNim] = useState(null);
+    setTimeout(() => fetchMahasiswa(), 500);
+  }, []);
 
-  const navigate = useNavigate();
-
-  const addMahasiswa = (newData) => {
+  const storeMahasiswa = (newData) => {
     setMahasiswa([...mahasiswa, newData]);
   };
 
@@ -44,46 +37,61 @@ const Mahasiswa = () => {
     setMahasiswa(filtered);
   };
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
   const openAddModal = () => {
-    setIsEdit(false);
-    setEditNim(null);
-    setForm({ nim: "", nama: "" });
+    setSelectedMahasiswa(null);
     setIsModalOpen(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const openEditModal = (nim) => {
+    const mhs = mahasiswa.find((item) => item.nim === nim);
+    setSelectedMahasiswa(mhs);
+    setIsModalOpen(true);
+  };
 
-    if (!form.nim || !form.nama) {
-      alert("NIM dan Nama wajib diisi");
-      return;
-    }
+  const handleSubmit = async (form) => {
+    if (selectedMahasiswa) {
+      const isConfirmed = await confirmAction({
+        title: "Konfirmasi Update",
+        text: `Yakin ingin menyimpan perubahan data ${form.nama}?`,
+        confirmButtonText: "Ya, Simpan",
+      });
 
-    if (isEdit) {
-      updateMahasiswa(editNim, form);
+      if (isConfirmed) {
+        updateMahasiswa(selectedMahasiswa.nim, form);
+        showSuccess("Data berhasil diperbarui!");
+        return true;
+      } else {
+        showError("Perubahan data dibatalkan!");
+        return false;
+      }
     } else {
-      addMahasiswa(form);
+      const isDuplicate = mahasiswa.some(
+        (mhs) => String(mhs.nim) === String(form.nim.trim())
+      );
+
+      if (isDuplicate) {
+        showError("NIM sudah terdaftar! Gunakan NIM yang berbeda.");
+        return false;
+      }
+
+      storeMahasiswa({ ...form, status: true });
+      showSuccess("Data berhasil ditambahkan!");
+      return true;
     }
-
-    setForm({ nim: "", nama: "" });
-    setIsModalOpen(false);
   };
 
-  const handleEdit = (mhs) => {
-    setIsEdit(true);
-    setEditNim(mhs.nim);
-    setForm({ nim: mhs.nim, nama: mhs.nama });
-    setIsModalOpen(true);
-  };
+  const handleDelete = async (nim) => {
+    const isConfirmed = await confirmAction({
+      title: "Konfirmasi Hapus",
+      text: `Yakin ingin menghapus mahasiswa dengan NIM ${nim}?`,
+      confirmButtonText: "Ya, Hapus",
+    });
 
-  const handleDelete = (nim, nama) => {
-    if (confirm(`Yakin ingin hapus ${nama}?`)) {
+    if (isConfirmed) {
       deleteMahasiswa(nim);
-      alert("Data berhasil dihapus!");
+      showSuccess("Data berhasil dihapus!");
+    } else {
+      showError("Penghapusan data dibatalkan!");
     }
   };
 
@@ -95,126 +103,22 @@ const Mahasiswa = () => {
             Daftar Mahasiswa
           </Heading>
 
-          <Button onClick={openAddModal}>
-            + Tambah Mahasiswa
-          </Button>
+          <Button onClick={openAddModal}>+ Tambah Mahasiswa</Button>
         </div>
 
-        <table className="w-full text-sm text-gray-700">
-          <thead className="bg-blue-600 text-white">
-            <tr>
-              <th className="py-2 px-4 text-left">NIM</th>
-              <th className="py-2 px-4 text-left">Nama</th>
-              <th className="py-2 px-4 text-center">Aksi</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {mahasiswa.map((mhs, index) => (
-              <tr
-                key={mhs.nim}
-                className={
-                  index % 2 === 0 ? "bg-white" : "bg-gray-100"
-                }
-              >
-                <td className="py-2 px-4">{mhs.nim}</td>
-                <td className="py-2 px-4">{mhs.nama}</td>
-
-                <td className="py-2 px-4 text-center space-x-2">
-                  <Button
-                    onClick={() =>
-                      navigate(`/admin/mahasiswa/${mhs.nim}`)
-                    }
-                  >
-                    Detail
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    variant="warning"
-                    onClick={() => handleEdit(mhs)}
-                  >
-                    Edit
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() =>
-                      handleDelete(mhs.nim, mhs.nama)
-                    }
-                  >
-                    Hapus
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <MahasiswaTable
+          mahasiswa={mahasiswa}
+          openEditModal={openEditModal}
+          onDelete={handleDelete}
+        />
       </Card>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.3)] z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
-            <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="text-lg font-semibold">
-                {isEdit ? "Edit Mahasiswa" : "Tambah Mahasiswa"}
-              </h2>
-
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-600 hover:text-red-500 text-xl"
-              >
-                &times;
-              </button>
-            </div>
-
-            <form
-              onSubmit={handleSubmit}
-              className="p-4 space-y-4"
-            >
-              <div>
-                <Label htmlFor="nim">NIM</Label>
-                <Input
-                  type="text"
-                  name="nim"
-                  value={form.nim}
-                  onChange={handleChange}
-                  readOnly={isEdit}
-                  placeholder="Masukkan NIM"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="nama">Nama</Label>
-                <Input
-                  type="text"
-                  name="nama"
-                  value={form.nama}
-                  onChange={handleChange}
-                  placeholder="Masukkan Nama"
-                  required
-                />
-              </div>
-
-              <div className="flex justify-end space-x-2">
-                <Button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Batal
-                </Button>
-
-                <Button type="submit">
-                  Simpan
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <MahasiswaModal
+        isModalOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmit}
+        selectedMahasiswa={selectedMahasiswa}
+      />
     </>
   );
 };

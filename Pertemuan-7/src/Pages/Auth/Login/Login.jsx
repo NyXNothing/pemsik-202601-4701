@@ -10,8 +10,11 @@ import Form from "@/Pages/Auth/Components/Form";
 
 import { dummyUser } from "@/Data/Dummy";
 
+import { showSuccess, showError } from "@/Helpers/ToastHelper";
+
 const Login = () => {
   const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
@@ -19,9 +22,10 @@ const Login = () => {
 
     if (email === dummyUser.email && password === dummyUser.password) {
       localStorage.setItem("user", JSON.stringify(dummyUser));
+      showSuccess("Login berhasil!");
       navigate("/admin");
     } else {
-      alert("Email atau password salah!");
+      showError("Email atau password salah!");
     }
   };
 

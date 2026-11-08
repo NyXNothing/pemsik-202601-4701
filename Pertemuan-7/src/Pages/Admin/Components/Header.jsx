@@ -1,9 +1,29 @@
+import { useNavigate } from "react-router-dom";
 import Button from "@/Pages/Admin/Components/Button";
+import { confirmAction } from "@/Helpers/SwalHelper";
+import { showSuccess } from "@/Helpers/ToastHelper";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   const toggleProfileMenu = () => {
     const menu = document.getElementById("profileMenu");
     if (menu) menu.classList.toggle("hidden");
+  };
+
+  const handleLogout = async () => {
+    const isConfirmed = await confirmAction({
+      title: "Konfirmasi Logout",
+      text: "Apakah Anda yakin ingin keluar dari aplikasi?",
+      confirmButtonText: "Ya, Logout",
+      cancelButtonText: "Batal",
+    });
+
+    if (isConfirmed) {
+      localStorage.removeItem("user");
+      showSuccess("Berhasil logout!");
+      navigate("/");
+    }
   };
 
   return (
@@ -23,10 +43,7 @@ const Header = () => {
               Profile
             </a>
             <button
-              onClick={() => {
-                localStorage.removeItem("user");
-                location.href = "/";
-              }}
+              onClick={handleLogout}
               className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
             >
               Logout
