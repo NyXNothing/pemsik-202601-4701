@@ -10,6 +10,12 @@ import {
   confirmDelete,
   confirmUpdate,
 } from "@/Utils/Helpers/SwalHelpers";
+import {
+  getAllMahasiswa,
+  storeMahasiswa,
+  updateMahasiswa,
+  deleteMahasiswa,
+} from "@/Utils/Apis/MahasiswaApi";
 
 import { toastSuccess } from "@/Utils/Helpers/ToastHelpers";
 
@@ -21,7 +27,7 @@ const Mahasiswa = () => {
   const [form, setForm] = useState({ nim: "", nama: "" });
 
   const fetchMahasiswa = async () => {
-    setMahasiswa(mahasiswaList);
+    getAllMahasiswa().then((res) => setMahasiswa(res.data));
   };
 
   useEffect(() => {
