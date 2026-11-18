@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Input from "@/Pages/Auth/Components/Input";
@@ -15,44 +16,73 @@ import { toastSuccess, toastError } from "@/Utils/Helpers/ToastHelpers";
 const Login = () => {
   const navigate = useNavigate();
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const { email, password } = form;
+  // 1. Tambahkan state 'form' untuk menyimpan input email dan password
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
 
-  if (email === dummyUser.email && password === dummyUser.password) {
-    localStorage.setItem("user", JSON.stringify(dummyUser));
-    toastSuccess("Login berhasil!");
-    navigate("/admin/dashboard");
-  } else {
-    toastError("Email atau password salah!");
-  }
-};
+  // 2. Fungsi untuk memperbarui state saat user mengetik
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { email, password } = form;
+
+    if (email === dummyUser.email && password === dummyUser.password) {
+      localStorage.setItem("user", JSON.stringify(dummyUser));
+      toastSuccess("Login berhasil!");
+      navigate("/admin/dashboard");
+    } else {
+      toastError("Email atau password salah!");
+    }
+  };
 
   return (
-      <Card className="max-w-md">
-        <Heading as="h2">Login</Heading>
-        <Form onSubmit={handleSubmit}>
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input type="email" name="email" placeholder="Masukkan email" required />
-          </div>
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input type="password" name="password" placeholder="Masukkan password" required />
-          </div>
-          <div className="flex justify-between items-center">
-            <label className="flex items-center">
-              <input type="checkbox" className="mr-2" />
-              <span className="text-sm text-gray-600">Ingat saya</span>
-            </label>
-            <Link href="#" className="text-sm">Lupa password?</Link>
-          </div>
-          <Button type="submit" className="w-full">Login</Button>
-        </Form>
-        <p className="text-sm text-center text-gray-600 mt-4">
-          Belum punya akun? <Link href="#">Daftar</Link>
-        </p>
-      </Card>
+    <Card className="max-w-md">
+      <Heading as="h2">Login</Heading>
+      <Form onSubmit={handleSubmit}>
+        <div>
+          <Label htmlFor="email">Email</Label>
+          {/* 3. Hubungkan value dan onChange ke Input */}
+          <Input
+            type="email"
+            name="email"
+            placeholder="Masukkan email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            type="password"
+            name="password"
+            placeholder="Masukkan password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="flex justify-between items-center">
+          <label className="flex items-center">
+            <input type="checkbox" className="mr-2" />
+            <span className="text-sm text-gray-600">Ingat saya</span>
+          </label>
+          <Link href="#" className="text-sm">Lupa password?</Link>
+        </div>
+        <Button type="submit" className="w-full">Login</Button>
+      </Form>
+      <p className="text-sm text-center text-gray-600 mt-4">
+        Belum punya akun? <Link href="#">Daftar</Link>
+      </p>
+    </Card>
   );
 };
 
