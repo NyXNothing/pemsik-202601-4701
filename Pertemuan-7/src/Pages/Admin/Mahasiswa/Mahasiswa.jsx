@@ -1,17 +1,24 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "@/Pages/Admin/Components/Card";
 import Heading from "@/Pages/Admin/Components/Heading";
 import Button from "@/Pages/Admin/Components/Button";
 import MahasiswaModal from "./MahasiswaModal";
 import MahasiswaTable from "./MahasiswaTable";
 import { mahasiswaList } from "@/Data/Dummy";
-import { confirmAction } from "@/Helpers/SwalHelper";
-import { showSuccess, showError } from "@/Helpers/ToastHelper";
+import {
+  confirmDelete,
+  confirmUpdate,
+} from "@/Utils/Helpers/SwalHelpers";
+
+import { toastSuccess } from "@/Utils/Helpers/ToastHelpers";
 
 const Mahasiswa = () => {
+  const navigate = useNavigate();
   const [mahasiswa, setMahasiswa] = useState([]);
-  const [selectedMahasiswa, setSelectedMahasiswa] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [form, setForm] = useState({ nim: "", nama: "" });
 
   const fetchMahasiswa = async () => {
     setMahasiswa(mahasiswaList);
@@ -21,74 +28,61 @@ const Mahasiswa = () => {
     setTimeout(() => fetchMahasiswa(), 500);
   }, []);
 
-  const storeMahasiswa = (newData) => {
-    setMahasiswa([...mahasiswa, newData]);
-  };
-
-  const updateMahasiswa = (nim, newData) => {
-    const updated = mahasiswa.map((mhs) =>
-      mhs.nim === nim ? { ...mhs, ...newData } : mhs
-    );
-    setMahasiswa(updated);
-  };
-
-  const deleteMahasiswa = (nim) => {
-    const filtered = mahasiswa.filter((mhs) => mhs.nim !== nim);
-    setMahasiswa(filtered);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const openAddModal = () => {
-    setSelectedMahasiswa(null);
+    setForm({ nim: "", nama: "" });
+    setIsEdit(false);
     setIsModalOpen(true);
   };
 
-  const openEditModal = (nim) => {
-    const mhs = mahasiswa.find((item) => item.nim === nim);
-    setSelectedMahasiswa(mhs);
+  const handleEdit = (mhs) => {
+    setForm({ nim: mhs.nim, nama: mhs.nama });
+    setIsEdit(true);
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async (form) => {
-    if (selectedMahasiswa) {
-      const isConfirmed = await confirmAction({
-        title: "Konfirmasi Update",
-        text: `Yakin ingin menyimpan perubahan data ${form.nama}?`,
-        confirmButtonText: "Ya, Simpan",
-      });
+  const handleSubmit = (e) => {
+  e.preventDefault();
+  if (!form.nim || !form.nama) {
+    toastError("NIM dan Nama wajib diisi");
+    return;
+  }
 
-      if (isConfirmed) {
-        updateMahasiswa(selectedMahasiswa.nim, form);
-        showSuccess("Data berhasil diperbarui!");
-        return true;
-      } else {
-        showError("Perubahan data dibatalkan!");
-        return false;
-      }
-    } else {
-      const isDuplicate = mahasiswa.some(
-        (mhs) => String(mhs.nim) === String(form.nim.trim())
-      );
-
-      if (isDuplicate) {
-        showError("NIM sudah terdaftar! Gunakan NIM yang berbeda.");
-        return false;
-      }
-
-      storeMahasiswa({ ...form, status: true });
-      showSuccess("Data berhasil ditambahkan!");
-      return true;
-    }
-  };
-
-  const handleDelete = async (nim) => {
-    const isConfirmed = await confirmAction({
-      title: "Konfirmasi Hapus",
-      text: `Yakin ingin menghapus mahasiswa dengan NIM ${nim}?`,
-      confirmButtonText: "Ya, Hapus",
+  if (isEdit) {
+    confirmUpdate(() => {
+      updateMahasiswa(form.nim, form);
+      toastSuccess("Data berhasil diperbarui");
+      setForm({ nim: "", nama: "" });
+      setIsEdit(false);
+      setIsModalOpen(false);
     });
+  } else {
+    const exists = mahasiswa.find((m) => m.nim === form.nim);
+    if (exists) {
+      toastError("NIM sudah terdaftar!");
+      return;
+    }
+    addMahasiswa(form);
+    toastSuccess("Data berhasil ditambahkan");
+    setForm({ nim: "", nama: "" });
+    setIsModalOpen(false);
+  }
+};
+
+  const handleDelete = (nim) => {
+  confirmDelete(() => {
+    deleteMahasiswa(nim);
+    toastSuccess("Data berhasil dihapus");
+  });
+
 
     if (isConfirmed) {
-      deleteMahasiswa(nim);
+      const filtered = mahasiswa.filter((mhs) => mhs.nim !== nim);
+      setMahasiswa(filtered);
       showSuccess("Data berhasil dihapus!");
     } else {
       showError("Penghapusan data dibatalkan!");
@@ -107,17 +101,20 @@ const Mahasiswa = () => {
         </div>
 
         <MahasiswaTable
-          mahasiswa={mahasiswa}
-          openEditModal={openEditModal}
+          data={mahasiswa}
+          onEdit={handleEdit}
           onDelete={handleDelete}
+          onDetail={(nim) => navigate(`/admin/mahasiswa/${nim}`)}
         />
       </Card>
 
       <MahasiswaModal
-        isModalOpen={isModalOpen}
+        isOpen={isModalOpen}
+        isEdit={isEdit}
+        form={form}
+        onChange={handleChange}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
-        selectedMahasiswa={selectedMahasiswa}
       />
     </>
   );

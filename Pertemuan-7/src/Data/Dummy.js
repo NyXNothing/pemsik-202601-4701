@@ -19,4 +19,12 @@ export const mahasiswaList = [
     nim: "20211003",
     nama: "Ahmad Fauzi",
   },
+  {
+    nim: "20211004",
+    nama: "Ryan Armando",
+  },
+  {
+    nim: "20211005",
+    nama: "Nandoo",
+  },
 ];

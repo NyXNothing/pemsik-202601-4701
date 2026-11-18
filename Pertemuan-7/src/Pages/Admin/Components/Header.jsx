@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Button from "@/Pages/Admin/Components/Button";
-import { confirmAction } from "@/Helpers/SwalHelper";
-import { showSuccess } from "@/Helpers/ToastHelper";
+import { confirmLogout } from "@/Utils/Helpers/SwalHelpers";
+
 
 const Header = () => {
   const navigate = useNavigate();
@@ -11,20 +11,19 @@ const Header = () => {
     if (menu) menu.classList.toggle("hidden");
   };
 
-  const handleLogout = async () => {
-    const isConfirmed = await confirmAction({
-      title: "Konfirmasi Logout",
-      text: "Apakah Anda yakin ingin keluar dari aplikasi?",
-      confirmButtonText: "Ya, Logout",
-      cancelButtonText: "Batal",
-    });
+const handleLogout = () => {
+  confirmLogout(() => {
+    localStorage.removeItem("user");
+    location.href = "/";
+  });
+};
 
-    if (isConfirmed) {
-      localStorage.removeItem("user");
-      showSuccess("Berhasil logout!");
-      navigate("/");
-    }
-  };
+<button
+  onClick={handleLogout}
+  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+>
+  Logout
+</button>
 
   return (
     <header className="bg-white shadow-md">

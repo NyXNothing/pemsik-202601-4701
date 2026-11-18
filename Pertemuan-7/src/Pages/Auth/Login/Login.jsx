@@ -10,24 +10,23 @@ import Form from "@/Pages/Auth/Components/Form";
 
 import { dummyUser } from "@/Data/Dummy";
 
-import { showSuccess, showError } from "@/Helpers/ToastHelper";
+import { toastSuccess, toastError } from "@/Utils/Helpers/ToastHelpers";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const { email, password } = form;
 
-    if (email === dummyUser.email && password === dummyUser.password) {
-      localStorage.setItem("user", JSON.stringify(dummyUser));
-      showSuccess("Login berhasil!");
-      navigate("/admin");
-    } else {
-      showError("Email atau password salah!");
-    }
-  };
+  if (email === dummyUser.email && password === dummyUser.password) {
+    localStorage.setItem("user", JSON.stringify(dummyUser));
+    toastSuccess("Login berhasil!");
+    navigate("/admin/dashboard");
+  } else {
+    toastError("Email atau password salah!");
+  }
+};
 
   return (
       <Card className="max-w-md">
