@@ -60,7 +60,9 @@
         "matakuliah.create",
         "matakuliah.read",
         "matakuliah.update",
-        "matakuliah.delete"
+        "matakuliah.delete",
+        "user.page",
+        "user.update"
       ]
     },
     {

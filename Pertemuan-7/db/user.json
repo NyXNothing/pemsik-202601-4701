@@ -9,7 +9,8 @@
     "dashboard.page",
     "mahasiswa.page", "mahasiswa.create", "mahasiswa.read", "mahasiswa.update", "mahasiswa.delete",
     "dosen.page", "dosen.create", "dosen.read", "dosen.update", "dosen.delete",
-    "matakuliah.page", "matakuliah.create", "matakuliah.read", "matakuliah.update", "matakuliah.delete"
+    "matakuliah.page", "matakuliah.create", "matakuliah.read", "matakuliah.update", "matakuliah.delete","user.page",
+    "user.update"
     ]
 
   },
