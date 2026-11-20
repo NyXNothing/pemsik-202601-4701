@@ -1,1 +1,82 @@
-{}
+{
+  "Dosen": [
+    {
+      "id": "1",
+      "nidn": "0610018801",
+      "nama": "Dr. Budi Santoso, M.Kom"
+    },
+    {
+      "id": "2",
+      "nidn": "0615049002",
+      "nama": "Siti Aminah, M.T"
+    }
+  ],
+  "Mahasiswa": [
+    {
+      "id": 1,
+      "nama": "Andi",
+      "nim": "A11.2020.00001"
+    },
+    {
+      "id": 2,
+      "nama": "Budi",
+      "nim": "A11.2020.00002"
+    }
+  ],
+  "MataKuliah": [
+    {
+      "id": "1",
+      "kode": "MK001",
+      "nama": "Pemrograman Web",
+      "sks": 3
+    },
+    {
+      "id": "2",
+      "kode": "MK002",
+      "nama": "Basis Data",
+      "sks": 3
+    }
+  ],
+  "user": [
+    {
+      "id": 1,
+      "name": "Admin 1",
+      "email": "admin@mail.com",
+      "password": "admin123",
+      "role": "admin",
+      "permission": [
+        "dashboard.page",
+        "mahasiswa.page",
+        "mahasiswa.create",
+        "mahasiswa.read",
+        "mahasiswa.update",
+        "mahasiswa.delete",
+        "dosen.page",
+        "dosen.create",
+        "dosen.read",
+        "dosen.update",
+        "dosen.delete",
+        "matakuliah.page",
+        "matakuliah.create",
+        "matakuliah.read",
+        "matakuliah.update",
+        "matakuliah.delete"
+      ]
+    },
+    {
+      "id": "2",
+      "email": "mahasiswa@mail.com",
+      "password": "mahasiswa123",
+      "role": "mahasiswa",
+      "permission": [
+        "dashboard.page",
+        "mahasiswa.page",
+        "mahasiswa.read",
+        "dosen.page",
+        "dosen.read",
+        "matakuliah.page",
+        "matakuliah.read"
+      ]
+    }
+  ]
+}

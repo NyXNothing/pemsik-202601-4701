@@ -1,9 +1,11 @@
 import { Navigate } from "react-router-dom";
+import { useAuthStateContext } from "@/Utils/Contexts/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  const isLoggedIn = localStorage.getItem("user");
+  // ✅ Panggil hook di dalam komponen
+  const { user } = useAuthStateContext();
 
-  if (!isLoggedIn) {
+  if (!user) {
     return <Navigate to="/" />;
   }
 

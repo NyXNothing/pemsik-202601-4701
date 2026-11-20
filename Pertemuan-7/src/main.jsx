@@ -5,14 +5,19 @@ import { Toaster } from "react-hot-toast";
 
 import "./App.css";
 
+import { AuthProvider } from "@/Utils/Contexts/AuthContext";
+
 import AuthLayout from "@/Pages/Auth/AuthLayout";
 import AdminLayout from "@/Pages/Admin/AdminLayout";
 import ProtectedRoute from "@/Pages/Admin/Components/ProtectedRoute";
 
 import Login from "@/Pages/Auth/Login/Login";
+import Register from "@/Pages/Auth/Register/Register";
 import Dashboard from "@/Pages/Admin/Dashboard/Dashboard";
 import Mahasiswa from "@/Pages/Admin/Mahasiswa/Mahasiswa";
 import MahasiswaDetail from "@/Pages/Admin/MahasiswaDetail/MahasiswaDetail";
+import Dosen from "@/Pages/Admin/Dosen/Dosen";
+import MataKuliah from "@/Pages/Admin/MataKuliah/MataKuliah";
 import PageNotFound from "@/Pages/Error/PageNotFound";
 
 const router = createBrowserRouter([
@@ -23,6 +28,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
       },
     ],
   },
@@ -55,6 +64,15 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // ✅ Sekarang sejajar dengan dashboard & mahasiswa -> URL: /admin/dosen
+      {
+        path: "dosen",
+        element: <Dosen />,
+      },
+      {
+        path: "matakuliah",
+        element: <MataKuliah />,
+      },
     ],
   },
   {
@@ -65,7 +83,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Toaster position="top-right" reverseOrder={false} />
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <Toaster position="top-right" reverseOrder={false} />
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

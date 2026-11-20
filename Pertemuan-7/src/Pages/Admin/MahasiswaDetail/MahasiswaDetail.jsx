@@ -1,22 +1,41 @@
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Card from "@/Pages/Admin/Components/Card";
 import Heading from "@/Pages/Admin/Components/Heading";
-
-import { mahasiswaList } from "@/Data/Dummy";
+import { getMahasiswa } from "@/Utils/Apis/MahasiswaApi";
+import { toastError } from "@/Utils/Helpers/ToastHelpers";
 
 const MahasiswaDetail = () => {
+  const { id } = useParams();
+  const [mahasiswa, setMahasiswa] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const path = window.location.pathname;
-  const nim = path.split("/").pop();
+  const fetchMahasiswa = async () => {
+    try {
+      const res = await getMahasiswa(id);
+      setMahasiswa(res.data);
+    } catch (err) {
+      toastError("Gagal mengambil data mahasiswa");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const mahasiswa = mahasiswaList.find((m) => m.nim === nim);
+  useEffect(() => {
+    fetchMahasiswa();
+  }, [id]);
+
+  if (loading) return <p className="text-center">Memuat data...</p>;
 
   if (!mahasiswa) {
-    return <p className="text-red-600">Data mahasiswa tidak ditemukan.</p>;
+    return <p className="text-center text-red-600">Data tidak ditemukan</p>;
   }
 
   return (
     <Card>
-      <Heading as="h2" className="mb-4 text-left">Detail Mahasiswa</Heading>
+      <Heading as="h2" className="mb-4 text-left">
+        Detail Mahasiswa
+      </Heading>
       <table className="table-auto text-sm w-full">
         <tbody>
           <tr>

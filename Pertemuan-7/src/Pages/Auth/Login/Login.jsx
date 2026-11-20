@@ -1,5 +1,6 @@
+import { useNavigate, Navigate } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 import Input from "@/Pages/Auth/Components/Input";
 import Label from "@/Pages/Auth/Components/Label";
@@ -9,6 +10,8 @@ import Card from "@/Pages/Auth/Components/Card";
 import Heading from "@/Pages/Auth/Components/Heading";
 import Form from "@/Pages/Auth/Components/Form";
 import { login } from "@/Utils/Apis/AuthApi";
+import { useAuthStateContext } from "@/Utils/Contexts/AuthContext";
+
 
 import { dummyUser } from "@/Data/Dummy";
 
@@ -16,14 +19,13 @@ import { toastSuccess, toastError } from "@/Utils/Helpers/ToastHelpers";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { user, setUser } = useAuthStateContext();
 
-  // 1. Tambahkan state 'form' untuk menyimpan input email dan password
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  // 2. Fungsi untuk memperbarui state saat user mengetik
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -31,19 +33,21 @@ const Login = () => {
     });
   };
 
+  if (user) return <Navigate to="/admin" />;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = form;
-
     try {
-      const user = await login(email, password);
-      localStorage.setItem("user", JSON.stringify(user));
+      // ✅ Gunakan form.email dan form.password
+      const loggedInUser = await login(form.email, form.password);
+      setUser(loggedInUser); // otomatis simpan ke context + localStorage
       toastSuccess("Login berhasil");
+
       navigate("/admin/dashboard");
     } catch (err) {
       toastError(err.message);
     }
-};
+  };
 
   return (
     <Card className="max-w-md">
@@ -82,8 +86,9 @@ const Login = () => {
         <Button type="submit" className="w-full">Login</Button>
       </Form>
       <p className="text-sm text-center text-gray-600 mt-4">
-        Belum punya akun? <Link href="#">Daftar</Link>
+        Belum punya akun? <Link href="/register">Daftar</Link>
       </p>
+
     </Card>
   );
 };
