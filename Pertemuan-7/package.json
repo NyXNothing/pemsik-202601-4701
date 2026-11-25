@@ -11,6 +11,8 @@
     "serve": "node merge-json.cjs && json-server --watch db.json --port 3001"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.108.4",
+    "@tanstack/react-query-devtools": "^5.108.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hot-toast": "^2.6.1",

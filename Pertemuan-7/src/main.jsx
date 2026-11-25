@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Navigate, createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import "./App.css";
 
@@ -65,7 +66,7 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // ✅ Sekarang sejajar dengan dashboard & mahasiswa -> URL: /admin/dosen
+      
       {
         path: "dosen",
         element: <Dosen />,
@@ -86,11 +87,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
-      <Toaster position="top-right" reverseOrder={false} />
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <Toaster position="top-right" />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );
