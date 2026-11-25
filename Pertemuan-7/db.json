@@ -1,0 +1,25 @@
+{
+  "mahasiswa": [
+    {
+      "id": "1",
+      "nama": "Andi",
+      "nim": "A11.2020.00001"
+    },
+    {
+      "id": "2",
+      "nama": "Budi",
+      "nim": "A11.2020.00002"
+    },
+    {
+      "nim": "rian",
+      "nama": "A11.2024.15472",
+      "id": "Cwng1IjHke4"
+    },
+    {
+      "nim": "A11.2024.15732",
+      "nama": "Agus",
+      "id": "lWtx0osYAE8"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

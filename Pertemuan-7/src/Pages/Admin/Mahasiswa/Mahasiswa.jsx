@@ -5,11 +5,17 @@ import Heading from "@/Pages/Admin/Components/Heading";
 import Button from "@/Pages/Admin/Components/Button";
 import MahasiswaModal from "./MahasiswaModal";
 import MahasiswaTable from "./MahasiswaTable";
-import { mahasiswaList } from "@/Data/Dummy";
 import {
   confirmDelete,
   confirmUpdate,
 } from "@/Utils/Helpers/SwalHelpers";
+
+import {
+  getAllMahasiswa,
+  storeMahasiswa,
+  updateMahasiswa,
+  deleteMahasiswa,
+} from "@/Utils/Apis/MahasiswaApi";
 
 import { toastSuccess } from "@/Utils/Helpers/ToastHelpers";
 
@@ -21,7 +27,7 @@ const Mahasiswa = () => {
   const [form, setForm] = useState({ nim: "", nama: "" });
 
   const fetchMahasiswa = async () => {
-    setMahasiswa(mahasiswaList);
+    getAllMahasiswa().then((res) => setMahasiswa(res.data));
   };
 
   useEffect(() => {
@@ -40,7 +46,7 @@ const Mahasiswa = () => {
   };
 
   const handleEdit = (mhs) => {
-    setForm({ nim: mhs.nim, nama: mhs.nama });
+    setForm({ id: mhs.id, nim: mhs.nim, nama: mhs.nama });
     setIsEdit(true);
     setIsModalOpen(true);
   };
@@ -54,7 +60,7 @@ const Mahasiswa = () => {
 
   if (isEdit) {
     confirmUpdate(() => {
-      updateMahasiswa(form.nim, form);
+    updateMahasiswa(form.id, form);
       toastSuccess("Data berhasil diperbarui");
       setForm({ nim: "", nama: "" });
       setIsEdit(false);
@@ -66,7 +72,7 @@ const Mahasiswa = () => {
       toastError("NIM sudah terdaftar!");
       return;
     }
-    addMahasiswa(form);
+    storeMahasiswa(form);
     toastSuccess("Data berhasil ditambahkan");
     setForm({ nim: "", nama: "" });
     setIsModalOpen(false);
@@ -104,7 +110,7 @@ const Mahasiswa = () => {
           data={mahasiswa}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          onDetail={(nim) => navigate(`/admin/mahasiswa/${nim}`)}
+          onDetail={(id) => navigate(`/admin/mahasiswa/${id}`)} // sesuaikan juga
         />
       </Card>
 
