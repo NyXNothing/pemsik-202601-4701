@@ -1,4 +1,7 @@
 [
-  { "id": "1", "nidn": "0610018801", "nama": "Dr. Budi Santoso, M.Kom" },
-  { "id": "2", "nidn": "0615049002", "nama": "Siti Aminah, M.T" }
+  { "id": "1", "name": "Slamet", "max_sks": 12 },
+  { "id": "2", "name": "Tini", "max_sks": 10 },
+  { "id": "3", "name": "Udin", "max_sks": 14 },
+  { "id": "4", "name": "Vina", "max_sks": 16 },
+  { "id": "5", "name": "Wawan", "max_sks": 8 }
 ]

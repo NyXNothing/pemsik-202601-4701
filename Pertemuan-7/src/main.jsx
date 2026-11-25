@@ -21,6 +21,8 @@ import Dosen from "@/Pages/Admin/Dosen/Dosen";
 import MataKuliah from "@/Pages/Admin/MataKuliah/MataKuliah";
 import User from "@/Pages/Admin/User/User";
 import PageNotFound from "@/Pages/Error/PageNotFound";
+import RencanaStudi from "@/Pages/Admin/RencanaStudi/RencanaStudi";
+
 
 const router = createBrowserRouter([
   {
@@ -79,6 +81,10 @@ const router = createBrowserRouter([
         path: "users",
         element: <User />,
       },
+      {
+      path: "rencana-studi",
+      element: <RencanaStudi />,
+    },
     ],
   },
   {

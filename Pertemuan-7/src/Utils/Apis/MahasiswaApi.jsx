@@ -1,7 +1,8 @@
 import axios from "@/Utils/AxiosInstance";
 
-// Ambil semua mahasiswa
-export const getAllMahasiswa = () => axios.get("/Mahasiswa");
+
+export const getAllMahasiswa = (params = {}) =>
+    axios.get("/Mahasiswa", {params});
 
 // Ambil 1 mahasiswa
 export const getMahasiswa = (id) => axios.get(`/Mahasiswa/${id}`);
@@ -14,3 +15,5 @@ export const updateMahasiswa = (id, data) => axios.put(`/Mahasiswa/${id}`, data)
 
 // Hapus mahasiswa
 export const deleteMahasiswa = (id) => axios.delete(`/Mahasiswa/${id}`);
+
+

@@ -83,6 +83,19 @@ const Sidebar = () => {
           </NavLink>
         )}
 
+        {user?.permission?.includes("rencana-studi.page") && (
+          <NavLink
+            to="/admin/rencana-studi"
+            className={({ isActive }) =>
+              `flex items-center space-x-2 px-4 py-2 rounded ${
+                isActive ? "bg-blue-700" : "hover:bg-blue-700"
+              }`
+            }
+          >
+            <span>📚</span>
+            <span className="menu-text hidden lg:inline">Rencana Studi</span>
+          </NavLink>
+        )}
 
 
       </nav>

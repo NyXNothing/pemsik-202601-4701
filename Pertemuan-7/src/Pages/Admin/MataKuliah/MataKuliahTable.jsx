@@ -17,8 +17,8 @@ const MataKuliahTable = ({ data = [], onEdit, onDelete }) => {
       <tbody>
         {data.map((mk, index) => (
           <tr key={mk.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}>
-            <td className="py-2 px-4">{mk.kode}</td>
-            <td className="py-2 px-4">{mk.nama}</td>
+            <td className="py-2 px-4">{mk.kode || mk.code || "-"}</td>
+            <td className="py-2 px-4">{mk.name || mk.nama || "-"}</td>
             <td className="py-2 px-4 text-center">{mk.sks}</td>
             <td className="py-2 px-4 text-center space-x-2">
               {user?.permission?.includes("matakuliah.update") && (

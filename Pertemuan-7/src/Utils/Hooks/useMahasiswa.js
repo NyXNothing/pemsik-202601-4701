@@ -1,4 +1,3 @@
-// Utils/Hooks/useMahasiswa.jsx
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getAllMahasiswa,
@@ -8,49 +7,59 @@ import {
 } from "@/Utils/Apis/MahasiswaApi";
 import { toastSuccess, toastError } from "@/Utils/Helpers/ToastHelpers";
 
-// Ambil semua mahasiswa
-export const useMahasiswa = () =>
+// Ambil semua mahasiswa (support search, sort, pagination)
+export const useMahasiswa = (query = {}) =>
   useQuery({
-    queryKey: ["mahasiswa"],
-    queryFn: getAllMahasiswa,
-    select: (res) => res?.data ?? [],
+    queryKey: ["mahasiswa", query],
+    queryFn: () => getAllMahasiswa(query),
+    select: (res) => ({
+      data: res?.data ?? [],
+      total: parseInt(res.headers["x-total-count"] ?? "0", 10),
+    }),
+    placeholderData: (previousData) => previousData,
   });
 
-// Tambah
+// Tambah mahasiswa
 export const useStoreMahasiswa = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: storeMahasiswa,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mahasiswa"] });
-      toastSuccess("Mahasiswa berhasil ditambahkan!");
+      toastSuccess("Data berhasil ditambahkan");
     },
-    onError: () => toastError("Gagal menambahkan mahasiswa."),
+    onError: () => {
+      toastError("Gagal menambahkan data");
+    },
   });
 };
 
-// Edit
+// Update mahasiswa
 export const useUpdateMahasiswa = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, data }) => updateMahasiswa(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mahasiswa"] });
-      toastSuccess("Mahasiswa berhasil diperbarui!");
+      toastSuccess("Data berhasil diperbarui");
     },
-    onError: () => toastError("Gagal memperbarui mahasiswa."),
+    onError: () => {
+      toastError("Gagal memperbarui data");
+    },
   });
 };
 
-// Hapus
+// Hapus mahasiswa
 export const useDeleteMahasiswa = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteMahasiswa,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mahasiswa"] });
-      toastSuccess("Mahasiswa berhasil dihapus!");
+      toastSuccess("Data berhasil dihapus");
     },
-    onError: () => toastError("Gagal menghapus mahasiswa."),
+    onError: () => {
+      toastError("Gagal menghapus data");
+    },
   });
 };

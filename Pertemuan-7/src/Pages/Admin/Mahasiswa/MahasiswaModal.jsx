@@ -31,15 +31,14 @@ const MahasiswaModal = ({
 
         <form onSubmit={onSubmit} className="p-4 space-y-4">
           <div>
-            <Label htmlFor="nim">NIM</Label>
+            <Label htmlFor="nama">Max SKS</Label>
             <Input
-	            type="text"
-                name="nim"
-                value={form.nim}
-                onChange={onChange}
-                readOnly={isEdit}
-                placeholder="Masukkan NIM"
-                required
+              type="number"
+              name="max_sks"
+              value={form.max_sks}
+              onChange={onChange}
+              placeholder="Masukkan Max SKS"
+              required
             />
           </div>
           <div>

@@ -16,8 +16,8 @@ const DosenTable = ({ data = [], onEdit, onDelete }) => {
       <tbody>
         {data.map((dsn, index) => (
           <tr key={dsn.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}>
-            <td className="py-2 px-4">{dsn.nidn}</td>
-            <td className="py-2 px-4">{dsn.nama}</td>
+            <td className="py-2 px-4">{dsn.nidn || dsn.nip || "-"}</td>
+            <td className="py-2 px-4">{dsn.name || dsn.nama || "-"}</td>
             <td className="py-2 px-4 text-center space-x-2">
               {user?.permission?.includes("dosen.update") && (
                 <Button size="sm" variant="warning" onClick={() => onEdit(dsn)}>

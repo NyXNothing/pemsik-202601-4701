@@ -10,7 +10,7 @@
     "mahasiswa.page", "mahasiswa.create", "mahasiswa.read", "mahasiswa.update", "mahasiswa.delete",
     "dosen.page", "dosen.create", "dosen.read", "dosen.update", "dosen.delete",
     "matakuliah.page", "matakuliah.create", "matakuliah.read", "matakuliah.update", "matakuliah.delete","user.page",
-    "user.update"
+    "user.update","rencana-studi.page","rencana-studi.read","rencana-studi.create","rencana-studi.update","rencana-studi.delete"
     ]
 
   },
@@ -26,7 +26,10 @@
         "dosen.page",
         "dosen.read",
         "matakuliah.page",
-        "matakuliah.read"
+        "matakuliah.read",
+        "rencana-studi.page",
+        "rencana-studi.read"
+
     ]
   }
 
